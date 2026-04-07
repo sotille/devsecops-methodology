@@ -271,3 +271,109 @@ This document presents 30+ best practices drawn from real transformation program
 **Why it matters:** Development teams need stability in their security processes — they cannot re-learn the program every quarter. The platform can and should evolve rapidly under the hood, but the developer-facing interface (what findings look like, how to suppress, how to request exceptions) should change infrequently and with advance notice.
 
 **Lesson learned:** Programs that iterated quickly on the platform without managing the developer-facing change impact created confusion and reduced trust. Programs that managed platform and program evolution on separate cadences maintained developer engagement while continuously improving.
+
+---
+
+## Transformation Anti-Patterns
+
+The following anti-patterns represent the most common structural failures observed in DevSecOps transformation programs. Each pattern has a recognizable manifestation, an identifiable root cause, and a defined mitigation.
+
+### Anti-Pattern 1: The Security JIRA Pile
+
+**Manifestation**: Security scans run in CI and generate findings, findings are automatically ticketed in Jira, the Jira backlog grows to hundreds or thousands of items, engineering teams stop engaging with it, and the backlog becomes a permanent fixture that no one believes will ever be resolved.
+
+**Root cause**: Findings are generated faster than organizational capacity to remediate, and the ticketing process creates volume without providing triage, prioritization, or remediation support.
+
+**Mitigation**: Enforce rather than report. Turn blocking gates on for Critical vulnerabilities — the build breaks, the developer fixes it, no ticket needed. Reserve Jira tracking for findings that require multi-sprint remediation. Implement SLA-driven escalation (not ticket escalation — actual engineering manager conversations) for aged High findings. Shrink the backlog by fixing the highest-severity items before onboarding new teams.
+
+---
+
+### Anti-Pattern 2: The Security Theater Pipeline
+
+**Manifestation**: Security scans run on every PR and every build, dashboards show impressive coverage metrics, security is prominently listed in the team's engineering standards — but the scans run in warn-only mode, findings are never enforced, and the security "presence" in the pipeline produces no behavioral change.
+
+**Root cause**: The program was implemented to satisfy a compliance requirement or demonstrate visible security activity, without a commitment to actually enforcing security outcomes. Warn-only mode was never converted to enforce mode.
+
+**Mitigation**: Set a public, committed timeline for enabling enforcement gates. Communicate the timeline to engineering teams and leadership. Require active exceptions (with documented justification and a named approver) for any team that does not meet the enforcement timeline. A pipeline that does not enforce is more dangerous than no pipeline — it creates false confidence.
+
+---
+
+### Anti-Pattern 3: The Lone Security Architect
+
+**Manifestation**: All security knowledge and decision-making is concentrated in one individual — typically a skilled security architect or senior security engineer — who becomes the bottleneck for all security reviews, tool configuration, exception approvals, and training. When this person is unavailable or leaves, the program stalls.
+
+**Root cause**: The program was built on an individual's expertise rather than on documented processes, configured systems, and distributed knowledge.
+
+**Mitigation**: Require that all security knowledge be documented and all security processes be codified (as pipeline code, as ADRs, as runbooks) such that the program could continue with a replacement in their role. The security architect should be measured on how well the program operates without them, not on how indispensable they are. Succession planning for the transformation lead and security architect roles is a program governance requirement.
+
+---
+
+### Anti-Pattern 4: The Tool-First Transformation
+
+**Manifestation**: The program purchases and deploys 8–12 security tools within the first 3 months. Tools are running, dashboards are configured, the budget is committed — but engineering teams have not been trained, champions have not been recruited, and nobody is responding to the findings the tools generate.
+
+**Root cause**: Technology procurement is easier and faster than organizational change. The program leadership optimized for visible, measurable tooling deployment rather than for the cultural and process changes that make tools effective.
+
+**Mitigation**: Use the "People, Process, Technology" sequencing from the devsecops-framework. Identify and train champions before enabling enforcement. Establish the remediation process (how findings become tickets, who owns them, what the SLA is) before the tools are generating noise at scale. A security tool with no organizational process around it is an expensive source of alert fatigue.
+
+---
+
+### Anti-Pattern 5: The Compliance-Driven Minimum
+
+**Manifestation**: The program implements exactly the security controls required to pass the current audit and no more. DevSecOps practices are configured to generate the specific evidence required by the compliance framework (SOC 2, PCI DSS, ISO 27001) — but the security program does not extend beyond compliance requirements, and gaps outside the compliance boundary go unaddressed.
+
+**Root cause**: The program's mandate was compliance, not security. Compliance frameworks are a minimum bar, not a comprehensive security program. Leadership conflates compliance with security.
+
+**Mitigation**: Frame compliance automation as the baseline that funds and justifies the broader DevSecOps program. Implement compliance automation efficiently enough that it consumes minimal resources, then use those resources for risk-based security improvements that go beyond compliance requirements. Present to leadership the delta between "what compliance requires" and "what a good security program looks like" — and make an explicit risk-acceptance decision about that delta.
+
+---
+
+### Anti-Pattern 6: The Wave That Never Ends
+
+**Manifestation**: The program successfully completes a pilot and Wave 1, then stalls at Wave 2. The Wave 2 teams have legitimate technical reasons (legacy systems, unusual tech stacks, performance sensitivity) that complicate adoption. The program accommodates these reasons indefinitely, and Wave 3 never starts because Wave 2 is permanently "in progress."
+
+**Root cause**: Organizational inertia. Complex teams defer adoption, and the program lacks the authority or escalation path to push through the resistance. The transformation team moves on to other work while waiting for Wave 2 to "be ready."
+
+**Mitigation**: Set and enforce a maximum adoption timeline for each wave. Define an explicit escalation path (team lead → VP Engineering → CISO/CTO) for teams that exceed the timeline without a documented technical blocker. Build a "minimum viable adoption" path for genuinely complex teams: not the full template, but a specific set of controls that can be implemented given their constraints. Distinguish "this team is complex" from "this team's leader does not want to adopt."
+
+---
+
+## Security Champion Program Management Patterns
+
+### Champion Lifecycle Management
+
+Security champions have a natural lifecycle. Effective programs actively manage each stage:
+
+**Recruitment**: Do not wait for volunteers. Identify developers in each team who show security curiosity — asking security questions in code review, flagging potential vulnerabilities proactively, expressing interest in security topics. Personally invite them. Many of the best champions would not have self-identified.
+
+**Onboarding**: Provide a structured onboarding experience: formal role definition (what is expected of them), initial training (threat modeling, tool usage, secure code review), introduction to the champion community, and a clear escalation path for questions they cannot answer.
+
+**Activation**: In the first 30 days, give champions a specific, achievable task that demonstrates value — triaging the team's initial finding backlog, facilitating a threat modeling session, or running a security-focused retro. Early success builds confidence and team credibility.
+
+**Sustaining**: Champions who receive no ongoing support, training, or recognition within 90 days of onboarding typically reduce their engagement to zero. Sustaining requires: monthly Community of Practice sessions, quarterly advanced training, recognition in leadership communications, and escalation support when they encounter security questions beyond their expertise.
+
+**Succession**: When a champion changes roles or leaves, trigger an active succession process. The team lead nominates a successor, the new champion is onboarded within 30 days, and the departing champion documents their knowledge in the team's security runbook.
+
+### Community of Practice Design
+
+A security champion Community of Practice (CoP) that functions well is among the highest-leverage investments in a DevSecOps program. Design principles:
+
+**Meeting cadence**: Monthly synchronous meeting (60 minutes) plus an asynchronous channel for ongoing questions. Champions should leave each meeting with at least one concrete action to take back to their team.
+
+**Content mix**: One-third knowledge sharing (security trends, new tool features, interesting vulnerabilities), one-third peer problem-solving (champions bring specific challenges for the group to work through together), one-third program updates (what the security platform team is working on, upcoming changes).
+
+**Champion-led, not security-team-led**: The most effective CoPs rotate facilitation responsibility among champions rather than having the security team run every session. This distributes facilitation skills, builds champions' confidence, and avoids the "security lecture" format.
+
+**Cross-team connections**: Champions from different teams working on similar problems should connect. The CoP is the mechanism for this cross-pollination — and it routinely produces reusable solutions (shared suppression configurations, shared threat models, shared remediation guides) that reduce each team's individual effort.
+
+### Champion Influence Model
+
+Champions influence their teams most effectively through specific, low-friction mechanisms:
+
+**Pull request reviews**: Champions review PRs for security-relevant changes (authentication, cryptography, data handling, injection-prone patterns). Their comments are peer feedback, not security team mandates, and are received accordingly.
+
+**Team security retrospectives**: Quarterly retrospectives where the team reviews its security metrics, discusses recent security findings, and identifies one improvement for the next quarter. Champions facilitate; the team owns the outcome.
+
+**Security-focused story writing**: Champions help the team write security acceptance criteria for features with security implications, converting threat modeling outputs into concrete implementation requirements.
+
+**On-call security buddy**: For teams with on-call rotations, the champion is the first escalation point for security-related incidents — they triage whether an incident has security implications and know when to escalate to the security team.

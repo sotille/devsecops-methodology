@@ -232,23 +232,82 @@ Design the governance structure (see `docs/architecture.md` for governance level
 
 ### Activity 2.5: RACI Matrix
 
-Define the Responsible, Accountable, Consulted, Informed (RACI) model for key DevSecOps activities:
+Define the Responsible, Accountable, Consulted, Informed (RACI) model for key DevSecOps activities.
 
-| Activity | Dev Team | Security Champ | Security Team | Engineering Lead | CISO |
-|---|---|---|---|---|---|
-| Configure security pipeline stage | C | R | A | I | I |
-| Triage SAST finding | R | R | C | I | |
-| Approve SAST finding suppression | | C | A/R | I | |
-| Remediate HIGH vulnerability | R | I | C | A | I |
-| Escalate CRITICAL unmitigated risk | | R | R | C | A |
-| Approve production deployment | | | C | R | I |
-| Review security exception request | I | C | A | R | I |
-| Conduct threat modeling session | R | R | C | I | |
-| Maintain security toolchain | I | C | A/R | I | |
-| Security training delivery | I | C | A/R | I | |
-| Quarterly security review | C | C | R | R | A |
+**Key:** R = Responsible (does the work), A = Accountable (final decision authority), C = Consulted (input required), I = Informed (notified of outcome)
 
-**R** = Responsible (does the work), **A** = Accountable (final decision authority), **C** = Consulted, **I** = Informed
+#### RACI Template 1: Day-to-Day DevSecOps Operations
+
+| Activity | Dev Team | Security Champion | AppSec/Security Team | Platform/DevOps Team | Engineering Lead | CISO |
+|---|---|---|---|---|---|---|
+| Configure security pipeline stage | C | R | A | R | I | I |
+| Triage SAST finding (initial) | R | R | C | I | I | |
+| Approve SAST finding suppression | C | C | A | I | I | |
+| Remediate HIGH/CRITICAL vulnerability | R | I | C | I | A | I |
+| Escalate CRITICAL unmitigated risk | I | R | R | I | C | A |
+| Approve production deployment | I | I | C | R | A | I |
+| Review and approve security exception | I | C | A | I | R | I |
+| Conduct threat modeling session | R | R | C | I | I | |
+| Maintain security toolchain (build) | I | C | C | A/R | I | I |
+| Security training delivery | I | C | A/R | I | I | I |
+| Quarterly security review | C | C | R | C | R | A |
+| Security champion nomination | I | | A | I | R | I |
+| Write security test cases | R | R | C | I | I | |
+| Pre-commit hook configuration | C | R | C | A | I | |
+| Incident response (security incident) | I | C | R | R | A | A |
+
+#### RACI Template 2: Transformation Program Governance
+
+| Decision/Activity | Program Lead | Security Architecture | Platform Engineering | Compliance/GRC | CTO/VP Eng | CISO | Board |
+|---|---|---|---|---|---|---|---|
+| Transformation program sponsor | I | I | I | I | I | A | R |
+| Toolchain selection and approval | R | A | C | C | I | I | |
+| Security gate threshold setting | C | A/R | C | C | I | C | |
+| Exception policy approval | C | C | I | R | I | A | |
+| Pilot team selection | A | C | C | I | R | I | |
+| Wave expansion approval | R | C | C | I | A | C | |
+| Compliance framework mapping | C | C | I | A/R | I | C | |
+| Budget approval (tools) | R | C | C | I | A | C | I |
+| KPI framework approval | R | C | C | I | A | A | I |
+| External audit coordination | I | I | I | R | I | A | |
+| Board security reporting | I | I | I | C | C | R | I |
+
+#### RACI Template 3: Security Incident during DevSecOps Pipeline
+
+| Activity | Developer | Security Champion | Security Team (SOC) | Platform/DevOps | Engineering Manager | Legal/Compliance |
+|---|---|---|---|---|---|---|
+| Detect security event (pipeline alert) | R | I | I | A | I | |
+| Initial triage (production/non-production) | R | R | C | C | I | |
+| Escalate to Security Team | R | I | A | I | I | |
+| Investigate and determine blast radius | C | C | A/R | C | I | |
+| Contain (rollback/block deployment) | C | C | C | R | A | |
+| Notify internal stakeholders | I | I | R | I | A | C |
+| Notify external parties (if required) | I | | C | I | C | A |
+| Conduct post-mortem | R | R | R | R | A | I |
+| Update runbooks based on findings | I | R | A/R | I | I | |
+
+#### Role Definition Templates
+
+The following role definitions can be adapted as job descriptions or team charter components:
+
+**Application Security Engineer (Embedded)**
+- Reports to: Security team, with dotted line to Engineering leadership
+- Primary responsibility: Advise product teams on secure design, threat model facilitation, security code review for high-risk changes
+- Secondary responsibilities: Manage SAST/DAST tool configuration for assigned teams, triage and prioritize security findings, conduct team security training
+- Success metrics: Vulnerability escape rate for assigned teams, threat model coverage for new features, developer security survey scores
+
+**Security Champion (Embedded Developer)**
+- Reports to: Engineering Manager (primary), Security team (dotted line for security activities)
+- Time allocation: 15–25% of sprint capacity for security champion activities
+- Primary responsibility: First-line security review for the team, liaison to security team, drive adoption of security practices in sprint workflow
+- Secondary responsibilities: Attend monthly security champions community of practice, maintain team's security tool configurations, conduct team security briefings
+- Success metrics: Team security scan coverage, security finding remediation SLA compliance, team developer security survey scores
+
+**DevSecOps Platform Engineer**
+- Reports to: Platform/Infrastructure Engineering
+- Primary responsibility: Build, maintain, and improve the shared security pipeline toolchain
+- Secondary responsibilities: Security tool vendor evaluations, pipeline performance and reliability, security tool integration development
+- Success metrics: Pipeline security scan coverage across org, scanner false positive rates, security gate adoption rate, time-to-detect for pipeline-introduced vulnerabilities
 
 ---
 

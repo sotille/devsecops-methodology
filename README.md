@@ -55,6 +55,9 @@ This methodology is a consulting playbook for DevSecOps transformation programs.
 | `docs/architecture.md` | Methodology architecture: 4 phases, operating model, governance, toolchain decision framework, organizational design |
 | `docs/framework.md` | Full methodology: all four phases in detail, RACI, pitfalls, anti-patterns |
 | `docs/implementation.md` | 90-day implementation playbook, team structure, pilot design, scaling, executive management |
+| `docs/anti-patterns.md` | 14 documented DevSecOps anti-patterns across organizational, process, toolchain, cultural, and measurement categories |
+| `docs/resistance-management.md` | Structured playbooks for diagnosing and addressing 7 types of organizational resistance to DevSecOps transformation |
+| `docs/distributed-teams.md` | DevSecOps transformation patterns for distributed and remote-first engineering organizations — async workflows, security champions, cross-timezone incident response |
 | `docs/best-practices.md` | 30+ best practices for transformation programs |
 | `docs/roadmap.md` | 18–24 month transformation timeline, ROI framework, risk register, executive reporting |
 
