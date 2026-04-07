@@ -58,6 +58,7 @@ This methodology is a consulting playbook for DevSecOps transformation programs.
 | `docs/anti-patterns.md` | 14 documented DevSecOps anti-patterns across organizational, process, toolchain, cultural, and measurement categories |
 | `docs/resistance-management.md` | Structured playbooks for diagnosing and addressing 7 types of organizational resistance to DevSecOps transformation |
 | `docs/distributed-teams.md` | DevSecOps transformation patterns for distributed and remote-first engineering organizations — async workflows, security champions, cross-timezone incident response |
+| `docs/executive-security-reporting.md` | Audience-segmented reporting structure for board, C-suite, and VP levels; metric selection; narrative framework; incident communication templates |
 | `docs/best-practices.md` | 30+ best practices for transformation programs |
 | `docs/roadmap.md` | 18–24 month transformation timeline, ROI framework, risk register, executive reporting |
 
@@ -98,6 +99,17 @@ This methodology is designed to complement, not replace, established industry fr
 | **DORA Metrics** | The KPI framework extends DORA's four key metrics (deployment frequency, lead time, change failure rate, MTTR) with security-specific leading indicators. |
 | **CIS Controls** | Tool selection in Phase 2 should be evaluated against relevant CIS Controls for coverage completeness. |
 | **ISO 27001** | Governance architecture in Phase 2 should align with A.8 (Technological Controls) and A.12 (Operations Security). |
+
+---
+
+## Learning Resources
+
+The Techstream Book Series and hands-on lab companion extend the concepts in this methodology with structured learning, transformation planning exercises, and organizational case studies.
+
+- **[Book 1: DevSecOps — Foundations & Transformation](https://www.techstream.app/learn)** — Part III of this book volume is directly based on this methodology: the 4-phase transformation, six failure patterns, executive sponsorship, and DORA-based measurement.
+- **[Hands-On Labs (techstream-learn/book-1-foundations/)](https://www.techstream.app/learn)** — Practical exercises including defining a security champion program structure, building a resistance management plan, and designing a transformation roadmap.
+- **[Book Series Overview (VOLUMES.md)](../techstream-books/VOLUMES.md)** — Index of all four Techstream volumes covering DevSecOps foundations, CI/CD security, cloud security, and release governance.
+- **[Techstream Platform](https://www.techstream.app)** — The central portal for all Techstream frameworks, documentation, and learning resources.
 
 ---
 

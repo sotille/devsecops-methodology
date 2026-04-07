@@ -108,6 +108,92 @@ Assess your current tool portfolio against this capability matrix:
 
 **Consolidation target:** Well-configured programs operate 8-12 security tools. Programs with 20+ tools typically have significant overlap and are candidates for consolidation.
 
+### Tool Consolidation Case Study: From 16 Tools to 9
+
+The following is a representative example of a tool consolidation analysis for a scale-up organization (150 engineers, Series C, preparing for SOC 2 Type II audit). Names are illustrative.
+
+**Starting state — 16 tools in use:**
+
+| Tool | Category | Annual Cost | Primary Function |
+|------|----------|-------------|-----------------|
+| Checkmarx SAST | Pipeline scanning | $42,000 | Static analysis |
+| SonarQube Enterprise | Pipeline scanning | $28,000 | Code quality + SAST |
+| Snyk Open Source | Pipeline scanning | $35,000 | SCA |
+| Trivy (self-hosted) | Pipeline scanning | $4,200 (infra) | Container + IaC scanning |
+| GitHub Advanced Security | Pipeline scanning | $19,200 | Secret scanning + SAST |
+| Gitleaks (self-hosted) | Pipeline scanning | $1,800 (infra) | Git secrets scanning |
+| CyberArk PAM | IAM | $95,000 | Privileged access |
+| Okta SSO | IAM | $31,000 | SSO + MFA |
+| HashiCorp Vault Enterprise | Secrets mgmt | $48,000 | Secrets management |
+| Twistlock/Prisma Compute | Cloud security | $76,000 | CSPM + runtime |
+| Lacework | Cloud security | $68,000 | Cloud threat detection |
+| DefectDojo (self-hosted) | Vuln management | $6,400 (infra) | Finding aggregation |
+| Dependency-Track (self-hosted) | Vuln management | $3,200 (infra) | SCA/SBOM tracking |
+| Vanta | Compliance | $30,000 | SOC 2 automation |
+| Drata | Compliance | $28,000 | SOC 2 automation |
+| Splunk Cloud | Observability | $110,000 | SIEM |
+
+**Total annual license + infrastructure cost: $626,800**
+
+**Consolidation analysis findings:**
+
+*Overlap identified:*
+
+1. **Checkmarx + SonarQube + GitHub Advanced Security** — three tools performing overlapping SAST functions. GHAS is already paid for as part of the GitHub Enterprise contract. Checkmarx and SonarQube serve partially different audiences (security team vs. developers) but with significant rule overlap.
+   - **Decision:** Retire Checkmarx (highest cost, lowest developer adoption). Retain SonarQube for developer-facing code quality gates. Retain GHAS for secrets scanning (native PR integration) and augment with Semgrep OSS for security-specific rules.
+   - **Annual saving:** $42,000 (Checkmarx) + reduced SonarQube tier = $52,000
+
+2. **Snyk + Trivy** — both performing SCA. Snyk adds developer experience features (IDE plugin, PR fix suggestions) but Trivy also covers containers and IaC. At this organization's scale, Trivy's broader coverage at lower cost wins.
+   - **Decision:** Retire Snyk Open Source. Expand Trivy usage to all repositories. Invest Snyk savings into Trivy CI caching infrastructure.
+   - **Annual saving:** $35,000 − $2,000 (additional Trivy infra) = $33,000
+
+3. **Gitleaks + GitHub Advanced Security secrets scanning** — direct functional overlap. GHAS secret scanning covers the same patterns and is already in the GitHub contract.
+   - **Decision:** Retire Gitleaks self-hosted. Use GHAS secret scanning as primary; retain Gitleaks as a local pre-commit hook (zero infra cost) for developer-side scanning.
+   - **Annual saving:** $1,800
+
+4. **Prisma Compute + Lacework** — both providing cloud threat detection. Prisma also provides CSPM functions that Lacework duplicates.
+   - **Decision:** Retain Prisma Compute (broader CSPM + runtime in one platform). Retire Lacework.
+   - **Annual saving:** $68,000
+
+5. **DefectDojo + Dependency-Track** — overlapping vulnerability management. Dependency-Track is purpose-built for SCA and SBOM; DefectDojo is broader but weaker on supply chain. As the organization moves toward SBOM-centric supply chain security, Dependency-Track is the right investment.
+   - **Decision:** Migrate DefectDojo finding aggregation into Dependency-Track + Jira integration. Retire DefectDojo.
+   - **Annual saving:** $6,400
+
+6. **Vanta + Drata** — two SOC 2 compliance automation platforms in use simultaneously (result of a team switch during the platform evaluation period).
+   - **Decision:** Complete full migration to Drata (preferred by the compliance team); retire Vanta.
+   - **Annual saving:** $30,000
+
+**Consolidated tool portfolio — 9 tools:**
+
+| Tool | Category | Annual Cost | Replaces |
+|------|----------|-------------|---------|
+| GitHub Advanced Security | Pipeline scanning | $19,200 | GHAS (retained), Gitleaks |
+| Semgrep OSS + SonarQube | Pipeline scanning | $28,000 | Checkmarx, SonarQube (reduced tier) |
+| Trivy (expanded) | Pipeline scanning | $7,200 (infra) | Trivy (retained), Snyk Open Source |
+| Okta SSO | IAM | $31,000 | Retained |
+| CyberArk PAM | IAM | $95,000 | Retained |
+| HashiCorp Vault Enterprise | Secrets mgmt | $48,000 | Retained |
+| Prisma Compute (CSPM + Runtime) | Cloud security | $76,000 | Prisma (retained), Lacework |
+| Dependency-Track (expanded) | Vuln management | $5,600 (infra) | DT (retained), DefectDojo |
+| Drata | Compliance | $28,000 | Drata (retained), Vanta |
+| Splunk Cloud | Observability | $110,000 | Retained |
+
+**Total annual cost after consolidation: $447,800**
+
+**Total annual saving: $179,000 (28.6% reduction)**
+
+**Additional operational benefits:**
+- Integration maintenance burden reduced from 16 tool connectors to 9
+- Training scope reduced — new engineers onboard to 9 tools instead of 16
+- Alert fatigue reduced — removing Lacework/DefectDojo overlap reduced duplicate alerts by approximately 35%
+- SOC 2 audit evidence collection simplified — single compliance platform with full control coverage
+
+**Consolidation effort required:**
+- Engineering time: ~320 hours over 3 months (migration, validation, re-tuning)
+- At $120/hour: $38,400 one-time cost
+- Net first-year saving after migration effort: $179,000 − $38,400 = **$140,600**
+- Payback period: **2.6 months**
+
 ---
 
 ## ROI Justification Framework

@@ -332,6 +332,107 @@ Anti-patterns are grouped into five categories: organizational, process, toolcha
 
 ---
 
+## AI-Assisted Development Anti-Patterns
+
+The widespread adoption of AI coding assistants, LLM-integrated code review tools, and autonomous agents operating within CI/CD pipelines has introduced a new class of anti-patterns. These failure modes are not covered by the earlier categories because they are specific to AI-native development workflows and agentic pipeline architectures.
+
+---
+
+### AP-A1: Implicit Trust in AI-Generated Code
+
+**Description:** Development teams accept and merge AI-generated code without applying the same scrutiny they would to human-written code. Reviewers assume that code suggested by a reputable AI assistant is correct, secure, and follows best practices.
+
+**Observable symptoms:**
+- Pull requests with substantial AI-generated content are approved faster than equivalent human-written code
+- SAST findings in AI-generated code are dismissed as false positives because "the AI wouldn't generate insecure code"
+- Security reviews skip AI-generated authentication, authorization, or cryptographic code
+- Teams report that security gates "slow down" AI-assisted development
+
+**Root causes:**
+- AI tools create an authority bias — output from a large model feels authoritative
+- AI tools generate syntactically correct, plausible-looking code even when it contains security flaws
+- Review workflows were not updated when AI tools were introduced
+- Productivity pressure from AI tool adoption creates incentive to merge faster
+
+**Remediation:**
+- Treat AI-generated code as untrusted input requiring the same review standard as external contributions
+- Define a mandatory security champion review for AI-generated code in authentication, authorization, cryptography, and secrets-handling paths
+- Run SAST with semantic rules specifically targeting common AI-generation vulnerabilities (SQL injection from f-string patterns, missing authentication checks)
+- See [Securing AI-Assisted Development Pipelines](../../secure-ci-cd-reference-architecture/docs/ai-assisted-development.md) for the full control framework
+
+---
+
+### AP-A2: Hallucinated Dependency Acceptance
+
+**Description:** Developers accept AI-suggested import statements and package names without verifying that the package exists in the target registry. Attackers who monitor common AI code generation patterns register the hallucinated names on public registries before developers notice, creating a "slopsquatting" supply chain attack vector.
+
+**Observable symptoms:**
+- CI builds fail with "package not found" errors for newly introduced dependencies
+- New dependencies appear in PRs that are not in the project's documentation or architecture decisions
+- SCA scans flag packages with no published CVEs, version history, or community activity — indicators of a newly registered package
+- Developers cannot explain why a specific package was chosen
+
+**Root causes:**
+- AI models hallucinate package names based on naming patterns from their training data
+- Developers accept suggestions wholesale without validating registry existence
+- No policy requiring documentation of package introduction rationale
+- No SCA check for "new package not previously observed in this project"
+
+**Remediation:**
+- Require all new dependencies to be explicitly approved before their first use — a PR comment or dependency decision record documenting the package, its purpose, and its verified registry existence
+- Deploy dependency confusion detection in SCA tooling (Snyk, Socket.dev) that alerts when a new package name is introduced for the first time
+- Enforce a private registry mirror that intercepts all package resolution; new packages must be explicitly approved before the mirror allows their download
+- Train developers to verify package existence and reputation before accepting AI suggestions: download count, publish date, open issues, maintainer reputation
+
+---
+
+### AP-A3: AI Pipeline Agent Without Authorization Boundaries
+
+**Description:** An AI agent is deployed with orchestration capabilities — it can read repositories, create pull requests, trigger pipelines, and approve deployments — without hard-coded, non-overridable authorization limits. The agent's scope is defined entirely by prompt engineering, which can be manipulated through prompt injection from adversarial inputs in the repositories or pipeline data it processes.
+
+**Observable symptoms:**
+- AI agent has access to production deployment tools with no independent approval gate
+- Agent authorization is controlled entirely by system prompt instructions
+- Agent can approve its own pull requests or trigger deployments without human oversight
+- No audit log of agent tool calls to an immutable store
+- Agent can modify its own pipeline configuration or the system prompts that govern its behavior
+
+**Root causes:**
+- AI agent frameworks default to capability-first models (grant broad access, restrict via prompts)
+- Organizations adopt agentic tools without defining an authorization model before deployment
+- Prompt-based restrictions are perceived as equivalent to technical access controls
+
+**Remediation:**
+- Apply the principle of least privilege at the IAM/RBAC layer, not at the prompt layer — an agent that does not need production deployment permissions must not have them, regardless of what the prompt says
+- Implement hard-coded, non-overridable production deployment gates that evaluate conditions outside the agent's control plane (a separate deterministic policy engine, not an LLM decision)
+- Log all agent tool calls to an immutable audit trail; alert on production tool invocations outside approved change windows
+- See [AI Pipeline Agent Privilege Escalation (AI-APE)](../../secure-ci-cd-reference-architecture/docs/threat-model.md) for detailed threat analysis
+
+---
+
+### AP-A4: AI Code Review as the Sole Security Gate
+
+**Description:** An LLM-based code review tool is configured as the primary or sole security gate in the CI/CD pipeline. Because the LLM produces plausible-sounding security assessments, teams reduce human security champion involvement or disable deterministic SAST tooling in favor of the more flexible AI review.
+
+**Observable symptoms:**
+- Deterministic SAST (Semgrep, CodeQL) has been removed or downgraded from blocking to advisory
+- Security review is satisfied by an AI tool's "passed" verdict without human confirmation
+- AI review verdicts cannot be independently reproduced or audited
+- Teams cite the AI reviewer's positive assessment when disputing SAST findings
+
+**Root causes:**
+- AI review tools produce more natural language output than SAST, making them feel more thorough
+- False positive reduction from AI review is conflated with improved security coverage
+- Organizational pressure to eliminate security review bottlenecks leads to replacing human review with AI review rather than augmenting it
+
+**Remediation:**
+- AI code review tools must augment deterministic SAST, not replace it — both must be present for security-sensitive code paths
+- AI review output must not be the sole basis for security gate approval; a deterministic policy-based control must co-exist
+- Treat AI review verdicts as advisory input to human security champions, not as an independent approval mechanism
+- Maintain a clear separation: AI tools for coverage and explanation; humans for accountability and judgment
+
+---
+
 ## Quick Reference Table
 
 | Anti-Pattern | Category | Risk Level | Common Trigger |
@@ -344,12 +445,16 @@ Anti-patterns are grouped into five categories: organizational, process, toolcha
 | Findings Logged, Not Resolved | Process | High | No SLA or ownership |
 | Immature Threat Modeling | Process | Medium | Skill gap, no tooling |
 | Tool Sprawl | Toolchain | Medium | Vendor-driven procurement |
-| Security Tools as Bureaucracy | Toolchain | Medium | Untune default configurations |
+| Security Tools as Bureaucracy | Toolchain | Medium | Untuned default configurations |
 | Config Drift Between Environments | Toolchain | High | Incremental hardening pattern |
 | Champions in Name Only | Cultural | Medium | Top-down program launch |
 | Blameful Incident Culture | Cultural | High | Punitive accountability model |
 | Vanity Metrics | Measurement | High | Reporting pressure |
 | Process Compliance Metrics | Measurement | Medium | Compliance framework origin |
+| Implicit Trust in AI-Generated Code | AI/Agentic | High | Authority bias, productivity pressure |
+| Hallucinated Dependency Acceptance | AI/Agentic | Critical | No new-dependency verification policy |
+| AI Agent Without Authorization Boundaries | AI/Agentic | Critical | Prompt-only access control |
+| AI Code Review as Sole Security Gate | AI/Agentic | High | SAST replacement rather than augmentation |
 
 ---
 
