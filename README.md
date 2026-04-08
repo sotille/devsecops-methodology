@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://techstream.app">
+    <img src="https://techstream.app/images/techstream-icon.svg" width="72" height="72" alt="TechStream" />
+  </a>
+</p>
+
 # DevSecOps Transformation Methodology
 
 A practitioner's methodology for DevSecOps transformation — developed by Techstream through advisory engagements with organizations ranging from scale-up SaaS companies to global financial institutions. This methodology provides a structured, evidence-based approach to embedding security into software delivery culture, toolchains, and governance — going beyond tool configuration to address the organizational change that makes transformation durable.
