@@ -377,3 +377,68 @@ Champions influence their teams most effectively through specific, low-friction 
 **Security-focused story writing**: Champions help the team write security acceptance criteria for features with security implications, converting threat modeling outputs into concrete implementation requirements.
 
 **On-call security buddy**: For teams with on-call rotations, the champion is the first escalation point for security-related incidents — they triage whether an incident has security implications and know when to escalate to the security team.
+
+---
+
+## DevSecOps Methodology in AI-Integrated Development Environments
+
+The introduction of AI coding assistants, autonomous code review agents, and agentic pipeline components into engineering workflows changes the transformation program model in specific ways. This section addresses how to adapt the methodology when AI tools are embedded in development.
+
+### How AI Tools Change the Transformation Program Model
+
+**AI tools do not replace security champions — they change what champions must know.**
+
+AI coding assistants (Copilot, Cursor, Claude Code, and similar tools) suggest code that developers accept at varying rates of scrutiny. Security champions in AI-integrated teams must understand how AI-generated code differs from human-generated code in security terms:
+
+- AI-generated code can introduce plausible-but-incorrect cryptographic usage, authentication patterns, and input handling — not because the model is adversarial, but because it optimizes for syntactic plausibility, not security correctness.
+- AI models trained on public code repositories have learned insecure patterns at the same frequency they appear in the training data. Injection vulnerabilities, hardcoded credentials, and insecure deserialization patterns appear in AI suggestions because they appear in training corpora.
+- AI code review tools flag the same vulnerability classes as traditional SAST but may have systematically different false positive profiles. Champions need to evaluate AI code review output with the same skepticism applied to traditional SAST — not deference because the source is AI.
+
+Add an AI coding tools module to the security champion training curriculum. The module should cover: how to read and evaluate AI-generated code suggestions for security properties, how AI code review tools differ from traditional SAST, and the appropriate escalation path when an AI tool's output is uncertain.
+
+---
+
+### Establish an AI Tool Inventory Before Enforcing Controls
+
+**Practice:** Conduct an inventory of all AI tools in use across engineering teams before designing AI-specific security controls.
+
+**Why it matters:** AI tool use in engineering organizations is rarely centrally managed in the first year. Developers use a mix of corporate-approved, individually purchased, and free-tier AI tools. Security controls designed for one tool profile will not apply to another. The inventory reveals the actual tool surface, which may differ significantly from what IT procurement records show.
+
+**What to inventory:**
+- AI coding assistants (IDE plugins, CLI tools, web interfaces)
+- AI-powered code review tools (standalone or integrated into CI)
+- Autonomous agents granted access to repositories, pipelines, or infrastructure
+- AI tools used for security analysis (AI-assisted SAST interpretation, AI threat modeling tools)
+
+**Lesson learned:** Organizations that inventoried before enforcing found on average 3x more AI tool variants in active use than were visible to the platform team. Controls designed without this inventory failed to cover the majority of actual AI tool usage.
+
+---
+
+### Apply Developer Experience Principles to AI Security Friction
+
+**Practice:** Apply the same developer experience analysis to AI security controls that you apply to traditional security controls. AI-specific controls that create excessive friction will be bypassed, disabled, or worked around.
+
+**Sources of AI-specific friction** that require active management:
+- Prompt sanitization that is too aggressive breaks legitimate developer workflows
+- AI-generated code that is blocked by SAST rules without a clear remediation path creates developer frustration disproportionate to traditional SAST blocks (because the developer did not write the code they are now required to fix)
+- Excessive circuit breaker sensitivity in AI pipeline components generates alert fatigue and causes teams to disable the circuit breaker rather than tune it
+
+**Practice:** When AI security controls generate friction complaints, treat them as product defects following the same process applied to traditional security tooling friction (see practice 4, "Treat Security Friction as a Product Bug"). AI security tooling is not exempt from developer experience standards.
+
+---
+
+### Governance Structures for Autonomous Agents
+
+When engineering teams deploy autonomous agents — components that take actions in repositories, pipelines, or infrastructure without per-action human approval — the transformation program requires governance structures that do not exist in traditional DevSecOps programs.
+
+**Minimum viable governance requirements for autonomous agent deployment:**
+
+1. **Agent registration:** Any agent granted autonomous authority over production systems must be registered in an AI tool inventory with: agent purpose, action policy, IAM/RBAC scope, authorization level (0–4, per the progressive autonomy model), and designated owner.
+
+2. **Authorization policy review:** The agent's authorization policy must be reviewed by the security team before the agent is granted Level 2 or higher autonomy. The review evaluates whether the policy implements POLA, whether blast radius limits are appropriate, and whether the rollback procedures cover all authorized actions.
+
+3. **Incident integration:** AI agents must be integrated into the incident response process. Security champions must know how to suspend an agent, collect its audit trail, and escalate to the security team when the agent's behavior is anomalous.
+
+4. **Champion responsibility:** For teams using autonomous agents, the security champion's on-call responsibility extends to agent behavior. Champions must be able to read agent audit logs, identify anomalous tool call patterns, and initiate containment procedures.
+
+**Cross-reference:** For the full agent authorization model, blast radius containment framework, and progressive autonomy levels, see [ai-devsecops-framework/docs/agent-authorization.md](../../ai-devsecops-framework/docs/agent-authorization.md) and [ai-devsecops-framework/docs/production-operations.md](../../ai-devsecops-framework/docs/production-operations.md).

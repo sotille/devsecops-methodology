@@ -108,7 +108,7 @@ The Techstream Book Series and hands-on lab companion extend the concepts in thi
 
 - **[Book 1: DevSecOps — Foundations & Transformation](https://www.techstream.app/learn)** — Part III of this book volume is directly based on this methodology: the 4-phase transformation, six failure patterns, executive sponsorship, and DORA-based measurement.
 - **[Hands-On Labs (techstream-learn/book-1-foundations/)](https://www.techstream.app/learn)** — Practical exercises including defining a security champion program structure, building a resistance management plan, and designing a transformation roadmap.
-- **[Book Series Overview (VOLUMES.md)](../techstream-books/VOLUMES.md)** — Index of all four Techstream volumes covering DevSecOps foundations, CI/CD security, cloud security, and release governance.
+- **[Book Series Overview (VOLUMES.md)](../techstream-books/VOLUMES.md)** — Index of all five Techstream volumes covering DevSecOps foundations, CI/CD security, cloud security, release governance, and AI and agentic systems security.
 - **[Techstream Platform](https://www.techstream.app)** — The central portal for all Techstream frameworks, documentation, and learning resources.
 
 ---

@@ -9,6 +9,7 @@ Format: `[version] — [date] — [summary of changes]`
 
 - Added CHANGELOG.md (this file) for version tracking
 - Added "Learning Resources" section to README.md linking to Book 1, techstream-learn labs, and techstream.app
+- [2026-04-08] docs/best-practices.md: Added "DevSecOps Methodology in AI-Integrated Development Environments" section — four subsections: (1) how AI tools change what security champions must know (AI-generated code security properties, champion training curriculum update); (2) AI tool inventory practice before enforcing controls (inventory scope: coding assistants, code review tools, autonomous agents, AI security tools; lesson: 3x more tool variants than IT procurement records); (3) developer experience principles applied to AI security friction (prompt sanitization over-blocking, AI SAST block UX, circuit breaker tuning); (4) minimum viable governance requirements for autonomous agents (registration, authorization policy review, incident response integration, champion on-call responsibility) with cross-reference to ai-devsecops-framework agent authorization and production operations docs
 
 ## [1.0.0] — 2024-01-15
 
